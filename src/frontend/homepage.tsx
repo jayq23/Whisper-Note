@@ -1,11 +1,28 @@
 import '../styles/homepage.css';
+import logo from '../assets/logo.svg';
+import { useNavigate } from 'react-router-dom';
 
 
 function homepage() {
+  const navigate = useNavigate();
+
   return (
     <div className="homepage">
-        <h1 className= "welcome-message">Write your first message</h1>
-        <button className="create-message-button">Create Message</button>
+      <header className="header">
+        <button className="login-button">Login</button>
+      </header>
+      <main className="hero-content">
+        <div className="logo-container">
+          <img src={logo} alt="Logo" className="logo" />
+        </div>
+        <h1 className="welcome-message">Write your first message</h1>
+        <button
+          className="create-message-button"
+          onClick={() => navigate('/create')}
+        >
+          Create Message
+        </button>
+      </main>
     </div>
   );
 }
