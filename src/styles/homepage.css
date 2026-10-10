@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.homepage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('../assets/background.svg');
+  background-size: cover;  
+  background-position: center; 
+  background-repeat: no-repeat;
+}
+
+.welcome-message {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 3.2rem;
+  color: #702951;
+  margin-bottom: 1.5rem;
+}
+
+.create-message-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: #e05688;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(224, 86, 136, 0.3);
+  transition: all 0.2s ease;
+}
+
+.create-message-button:hover {
+  background-color: #c73e6e;
+  transform: translateY(-2px);
+}
