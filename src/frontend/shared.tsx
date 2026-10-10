@@ -88,7 +88,7 @@ function SharedMessage() {
         {design.musicDataUrl && (
           <div className="shared-music">
             <span>🎵 {design.musicName || 'Your music'}</span>
-            <audio ref={audioRef} controls loop src={design.musicDataUrl}>
+            <audio ref={audioRef} controls loop preload="auto" src={design.musicDataUrl}>
               Your browser does not support audio playback.
             </audio>
           </div>
