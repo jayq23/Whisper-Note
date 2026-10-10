@@ -95,7 +95,7 @@ function Create() {
     <div className="create-page">
       <header className="editor-header">
         <h1>Create your message</h1>
-        <button className="share-button" onClick={generateLink}>
+        <button type="button" className="share-button" onClick={generateLink}>
           Generate share link
         </button>
       </header>

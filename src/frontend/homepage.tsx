@@ -9,7 +9,7 @@ function homepage() {
   return (
     <div className="homepage">
       <header className="header">
-        <button className="login-button">Login</button>
+        <button type="button" className="login-button">Login</button>
       </header>
       <main className="hero-content">
         <div className="logo-container">
@@ -17,6 +17,7 @@ function homepage() {
         </div>
         <h1 className="welcome-message">Write your first message</h1>
         <button
+          type="button"
           className="create-message-button"
           onClick={() => navigate('/create')}
         >
