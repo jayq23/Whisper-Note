@@ -56,7 +56,12 @@ function SharedMessage() {
     <div className="shared-page">
       <header className="shared-header">
         <span className="shared-brand">Whisper Notes</span>
-        <button className="make-one-button" onClick={() => navigate('/')}>
+        <button
+          type="button"
+          className="make-one-button"
+          onClick={() => navigate('/')}
+          title="Create your own message"
+        >
           Want to make one too?
         </button>
       </header>
