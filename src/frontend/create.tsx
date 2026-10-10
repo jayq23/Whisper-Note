@@ -148,6 +148,7 @@ function Create() {
                 onClick={() => addSticker(emoji)}
                 onDragStart={(event) => event.dataTransfer.setData('text/sticker', emoji)}
                 title={`Add ${emoji}`}
+                aria-label={`Add ${emoji} sticker`}
               >
                 {emoji}
               </button>
