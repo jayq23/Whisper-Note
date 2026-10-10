@@ -207,7 +207,7 @@ function Create() {
             ))}
           </div>
           {shareLink && (
-            <div className="share-result">
+            <div className="share-result" role="status" aria-live="polite">
               <strong>Link ready — copied to clipboard</strong>
               <input value={shareLink} readOnly aria-label="Generated share link" />
             </div>
