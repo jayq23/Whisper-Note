@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { readSharedDesign } from '../types/design';
 
+const TYPING_INTERVAL_MS = 65;
+
 function SharedMessage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -18,7 +20,7 @@ function SharedMessage() {
       characterIndex += 1;
       setVisibleMessage(design.message.slice(0, characterIndex));
       if (characterIndex >= design.message.length) window.clearInterval(timer);
-    }, 65);
+    }, TYPING_INTERVAL_MS);
 
     return () => window.clearInterval(timer);
   }, [design.message, isMusicStarted]);
