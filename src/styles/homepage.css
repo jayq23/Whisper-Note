@@ -57,6 +57,12 @@
   background-color: #c73e6e;
   transform: translateY(-2px);
 }
+
+.login-button:focus-visible,
+.create-message-button:focus-visible {
+  outline: 3px solid #702951;
+  outline-offset: 3px;
+}
 .logo-container {
   display: flex;
   align-items: center;

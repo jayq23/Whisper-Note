@@ -43,6 +43,14 @@
   background: #bc537a;
 }
 
+.share-button:focus-visible,
+.back-button:focus-visible,
+.make-one-button:focus-visible,
+.music-intro-button:focus-visible {
+  outline: 3px solid #702951;
+  outline-offset: 3px;
+}
+
 .editor-layout {
   display: grid;
   grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
