@@ -366,6 +366,16 @@
   height: 2rem;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
 .shared-message {
   display: flex;
   width: min(90vw, 820px);
