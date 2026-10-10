@@ -215,6 +215,7 @@
   .editor-header h1 { order: 3; width: 100%; }
   .editor-layout { grid-template-columns: 1fr; }
   .preview-panel { min-height: 420px; padding: 1rem; }
+  .editor-header .share-button { margin-left: auto; }
 }
 
 .shared-page {
