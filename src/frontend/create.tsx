@@ -8,8 +8,7 @@ import type { Design } from '../types/design';
 const stickerOptions = ['🌸', '💌', '✨', '🦋', '🎀', '💖', '🌷', '🧸'];
 const musicOptions = [
   { name: 'No music', source: '' },
-  { name: 'Sweet Note', source: '/music/sweet-note.wav' },
-  { name: 'Dreamy Bloom', source: '/music/dreamy-bloom.wav' },
+  { name: 'I knew it, I knew you', source: '/music/song1.mp3'},
 ];
 
 const fonts = [
