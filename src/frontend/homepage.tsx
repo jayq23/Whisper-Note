@@ -3,7 +3,7 @@ import logo from '../assets/logo.svg';
 import { useNavigate } from 'react-router-dom';
 
 
-function homepage() {
+function Homepage() {
   const navigate = useNavigate();
 
   return (
@@ -25,4 +25,4 @@ function homepage() {
   );
 }
 
-export default homepage;
+export default Homepage;
