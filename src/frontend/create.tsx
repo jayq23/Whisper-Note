@@ -6,7 +6,7 @@ import { readSharedDesign } from '../types/design';
 import type { Design } from '../types/design';
 import { saveDesign } from '../lib/firebase';
 
-const stickerOptions = ['🌸', '💌', '✨', '🦋', '🎀', '💖', '🌷', '🧸'];
+const stickerOptions = ['🌸', '💌', '✨', '🦋', '🎀', '💖', '𓍢ִ໋🌷͙֒', '🧸ྀི', 'ᥫ᭡', 'ꉂ(˵˃ ᗜ ˂˵)', '(˶ᵔ ᵕ ᵔ˶)', '⸜(｡˃ ᵕ ˂ )⸝♡', '(˶˃ ᵕ ˂˶)', '(╥﹏╥)', '⋆.ೃ࿔🌸*:･', ''];
 const musicOptions = [
   { name: 'No music', source: '' },
   { name: 'I knew it, I knew you', source: '/music/song1.mp3'},
