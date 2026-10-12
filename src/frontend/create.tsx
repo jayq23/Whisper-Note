@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import type { DragEvent } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../styles/create.css';
 import { readSharedDesign } from '../types/design';
 import type { Design } from '../types/design';
+import { saveDesign } from '../lib/firebase';
 
 const stickerOptions = ['🌸', '💌', '✨', '🦋', '🎀', '💖', '🌷', '🧸'];
 const musicOptions = [
@@ -25,6 +26,16 @@ const fonts = [
   { label: 'Serif', value: "Georgia, serif" },
   { label: 'Handwritten', value: "'Patrick Hand', cursive" },
   { label: 'Clean', value: 'Arial, sans-serif' },
+  { label: 'Quicksand', value: "'Quicksand', sans-serif" },
+  { label: 'Lora', value: "'Lora', serif" },
+  { label: 'Caveat', value: "'Caveat', cursive" },
+  { label: 'Comfortaa', value: "'Comfortaa', sans-serif" },
+  { label: 'Playfair Display', value: "'Playfair Display', serif" },
+  { label: 'DM Sans', value: "'DM Sans', sans-serif" },
+  { label: 'Raleway', value: "'Raleway', sans-serif" },
+  { label: 'Pacifico', value: "'Pacifico', cursive" },
+  { label: 'Libre Baskerville', value: "'Libre Baskerville', serif" },
+  { label: 'Baloo 2', value: "'Baloo 2', cursive" },
 ];
 
 function Create() {
@@ -32,6 +43,8 @@ function Create() {
   const [design, setDesign] = useState<Design>(() => readSharedDesign(location.search));
   const [shareLink, setShareLink] = useState('');
   const [draggedSticker, setDraggedSticker] = useState<number | null>(null);
+  const [musicDuration, setMusicDuration] = useState(0);
+  const musicRef = useRef<HTMLAudioElement>(null);
 
   const updateDesign = <K extends keyof Design>(key: K, value: Design[K]) => {
     setDesign((current) => ({ ...current, [key]: value }));
@@ -50,14 +63,16 @@ function Create() {
   );
 
   const generateLink = async () => {
-    const linkUrl = new URL('/view', document.baseURI);
-    linkUrl.searchParams.set('design', JSON.stringify(design));
-    const link = linkUrl.toString();
-    setShareLink(link);
     try {
+      const id = await saveDesign(design);
+      const linkUrl = new URL('/view', document.baseURI);
+      linkUrl.searchParams.set('id', id);
+      const link = linkUrl.toString();
+      setShareLink(link);
       await navigator.clipboard.writeText(link);
-    } catch {
-      // The link remains visible when clipboard access is unavailable.
+    } catch (error) {
+      setShareLink('');
+      window.alert(error instanceof Error ? error.message : 'Unable to create a share link.');
     }
   };
 
@@ -68,6 +83,14 @@ function Create() {
         ...current.stickers,
         { id: Date.now(), emoji, left: 50, top: 50 },
       ],
+    }));
+    setShareLink('');
+  };
+
+  const removeSticker = (id: number) => {
+    setDesign((current) => ({
+      ...current,
+      stickers: current.stickers.filter((sticker) => sticker.id !== id),
     }));
     setShareLink('');
   };
@@ -150,6 +173,7 @@ function Create() {
           <div className="sticker-palette" aria-label="Sticker choices">
             {stickerOptions.map((emoji) => (
               <button
+                type="button"
                 className="sticker-choice"
                 draggable
                 key={emoji}
@@ -163,6 +187,25 @@ function Create() {
             ))}
           </div>
           <small className="sticker-hint">Click a sticker to add it, or drag it onto your design.</small>
+          {design.stickers.length > 0 && (
+            <div className="added-stickers" aria-label="Added stickers">
+              <span className="added-stickers-label">Added stickers</span>
+              <div className="added-stickers-list">
+                {design.stickers.map((sticker) => (
+                  <button
+                    type="button"
+                    className="remove-sticker"
+                    key={sticker.id}
+                    onClick={() => removeSticker(sticker.id)}
+                    title={`Remove ${sticker.emoji} sticker`}
+                  >
+                    <span aria-hidden="true">{sticker.emoji}</span>
+                    <span>Remove</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           <label htmlFor="music-choice">Music</label>
           <select
             id="music-choice"
@@ -173,6 +216,7 @@ function Create() {
                 ...current,
                 musicDataUrl: option?.source ?? '',
                 musicName: option?.name ?? '',
+                musicStartTime: 0,
               }));
               setShareLink('');
             }}
@@ -183,9 +227,40 @@ function Create() {
           </select>
           {design.musicName && <small className="sticker-hint">Selected: {design.musicName}</small>}
           {design.musicDataUrl && (
-            <audio className="editor-audio" controls src={design.musicDataUrl}>
-              Your browser does not support audio playback.
-            </audio>
+            <>
+              <audio
+                ref={musicRef}
+                className="editor-audio"
+                controls
+                src={design.musicDataUrl}
+                onLoadedMetadata={(event) => setMusicDuration(event.currentTarget.duration)}
+              >
+                Your browser does not support audio playback.
+              </audio>
+              <div className="music-start-control">
+                <div className="control-row">
+                  <label htmlFor="music-start">Lyrics start point</label>
+                  <output>{design.musicStartTime.toFixed(1)}s</output>
+                </div>
+                <input
+                  id="music-start"
+                  type="range"
+                  min="0"
+                  max={musicDuration || 0}
+                  step="0.1"
+                  value={Math.min(design.musicStartTime, musicDuration || 0)}
+                  disabled={!musicDuration}
+                  onChange={(event) => {
+                    const startTime = Number(event.target.value);
+                    updateDesign('musicStartTime', startTime);
+                    if (musicRef.current) musicRef.current.currentTime = startTime;
+                  }}
+                />
+                <small className="sticker-hint">
+                  Choose where the song begins when someone opens your message.
+                </small>
+              </div>
+            </>
           )}
         </section>
 
