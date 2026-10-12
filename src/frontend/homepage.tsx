@@ -8,9 +8,6 @@ function homepage() {
 
   return (
     <div className="homepage">
-      <header className="header">
-        <button type="button" className="login-button">Login</button>
-      </header>
       <main className="hero-content">
         <div className="logo-container">
           <img src={logo} alt="Logo" className="logo" />
