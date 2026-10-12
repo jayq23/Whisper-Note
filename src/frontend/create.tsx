@@ -15,7 +15,7 @@ const musicOptions = [
   { name: 'La la lost you', source: '/music/song5.mp3' },
   { name: 'The apartment we won\'t share', source: '/music/song6.mp3' },
   { name: 'Backburner', source: '/music/song7.mp3' },
-  { name: 'Totoong tayo', source: '/music/song8.mp4' },
+  { name: 'Totoong tayo', source: '/music/song8.mp3' },
   { name: 'I love you, im sorry', source: '/music/song9.mp3' },
   { name: 'GabI', source: '/music/song10.mp3' },
 ];
