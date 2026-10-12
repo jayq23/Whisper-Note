@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /messages/{messageId} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if request.resource.data.keys().hasOnly([
+        'message',
+        'font',
+        'fontSize',
+        'color',
+        'background',
+        'align',
+        'stickers',
+        'musicDataUrl',
+        'musicName',
+        'musicStartTime',
+        'placeholder'
+      ])
+      && request.resource.data.message is string
+      && request.resource.data.message.size() <= 10000
+      && request.resource.data.stickers is list
+      && request.resource.data.stickers.size() <= 100
+      && request.resource.data.musicDataUrl is string
+      && request.resource.data.musicDataUrl.size() <= 500
+      && request.resource.data.musicStartTime is number;
+      allow update, delete: if false;
+    }
+  }
+}
