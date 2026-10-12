@@ -12,7 +12,7 @@ function homepage() {
         <div className="logo-container">
           <img src={logo} alt="Logo" className="logo" />
         </div>
-        <h1 className="welcome-message">Write your first message</h1>
+        <h1 className="welcome-message">Write your first message!</h1>
         <button
           type="button"
           className="create-message-button"
