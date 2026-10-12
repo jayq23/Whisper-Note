@@ -1,25 +1,63 @@
 import { useEffect, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { readSharedDesign } from '../types/design';
+import type { Design } from '../types/design';
+import { getSharedDesign } from '../lib/firebase';
 
 const TYPING_INTERVAL_MS = 65;
+const floatingHearts = ['♥', '♡', '✦', '♥', '✧', '♡'];
+const backgroundParticles = ['·', '✦', '·', '✧', '·', '✦', '·', '♡'];
+const sparkles = ['✦', '✧', '✦', '·', '✧'];
 
 function SharedMessage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const design = readSharedDesign(location.search);
+  const [design, setDesign] = useState<Design>(() => readSharedDesign(location.search));
+  const [loadError, setLoadError] = useState('');
+  const messageId = new URLSearchParams(location.search).get('id');
   const [visibleMessage, setVisibleMessage] = useState('');
   const [isMusicStarted, setIsMusicStarted] = useState(!design.musicDataUrl);
+  const [isTypingComplete, setIsTypingComplete] = useState(!design.message);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (!messageId) return;
+
+    let isCurrent = true;
+    void getSharedDesign(messageId)
+      .then((loadedDesign) => {
+        if (!isCurrent) return;
+        if (!loadedDesign) {
+          setLoadError('This message could not be found.');
+          return;
+        }
+        setDesign(loadedDesign);
+        setIsMusicStarted(!loadedDesign.musicDataUrl);
+      })
+      .catch((error: unknown) => {
+        if (isCurrent) {
+          setLoadError(error instanceof Error ? error.message : 'Unable to load this message.');
+        }
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [messageId]);
 
   useEffect(() => {
     if (!isMusicStarted) return;
     setVisibleMessage('');
+    setIsTypingComplete(false);
     let characterIndex = 0;
     const timer = window.setInterval(() => {
       characterIndex += 1;
       setVisibleMessage(design.message.slice(0, characterIndex));
-      if (characterIndex >= design.message.length) window.clearInterval(timer);
+      if (characterIndex >= design.message.length) {
+        window.clearInterval(timer);
+        setIsTypingComplete(true);
+      }
     }, TYPING_INTERVAL_MS);
 
     return () => window.clearInterval(timer);
@@ -30,16 +68,17 @@ function SharedMessage() {
     if (!audio || !design.musicDataUrl || !isMusicStarted) return;
 
     audio.load();
+    audio.currentTime = design.musicStartTime;
     void audio.play().catch(() => {
       // The recipient already interacted with the play overlay.
     });
-  }, [design.musicDataUrl, isMusicStarted]);
+  }, [design.musicDataUrl, design.musicStartTime, isMusicStarted]);
 
   const startMusic = () => {
     setIsMusicStarted(true);
     const audio = audioRef.current;
     if (audio) {
-      audio.currentTime = 0;
+      audio.currentTime = design.musicStartTime;
       void audio.play();
     }
   };
@@ -54,6 +93,13 @@ function SharedMessage() {
 
   return (
     <div className="shared-page">
+      <div className="background-particles" aria-hidden="true">
+        {backgroundParticles.map((particle, index) => (
+          <span key={`${particle}-${index}`} style={{ '--particle-index': index } as CSSProperties}>
+            {particle}
+          </span>
+        ))}
+      </div>
       <header className="shared-header">
         <span className="shared-brand">Whisper Notes</span>
         <button
@@ -66,6 +112,7 @@ function SharedMessage() {
         </button>
       </header>
       <main className="shared-content">
+        {loadError && <p role="alert">{loadError}</p>}
         {!isMusicStarted && (
           <div className="music-intro" role="dialog" aria-modal="true" aria-labelledby="music-intro-title">
             <div className="music-intro-card">
@@ -78,17 +125,38 @@ function SharedMessage() {
             </div>
           </div>
         )}
-        <div className="shared-message" style={messageStyle}>
-          <span className="message-text">{visibleMessage}</span>
+        <div className={`shared-message ${isMusicStarted ? 'message-visible' : ''} ${isMusicStarted && design.musicDataUrl ? 'music-playing' : ''}`} style={messageStyle}>
+          <span className="message-text">
+            {visibleMessage}
+            {isMusicStarted && !isTypingComplete && <span className="typing-cursor" aria-hidden="true">|</span>}
+          </span>
           {design.stickers.map((sticker) => (
             <span
-              className="canvas-sticker"
+              className={`canvas-sticker sticker-effect sticker-effect-${sticker.id % 3}`}
               key={sticker.id}
               style={{ left: `${sticker.left}%`, top: `${sticker.top}%` }}
             >
               {sticker.emoji}
             </span>
           ))}
+          {isTypingComplete && (
+            <>
+              <div className="floating-hearts" aria-hidden="true">
+                {floatingHearts.map((heart, index) => (
+                  <span key={`${heart}-${index}`} style={{ '--heart-index': index } as CSSProperties}>
+                    {heart}
+                  </span>
+                ))}
+              </div>
+              <div className="message-sparkles" aria-hidden="true">
+                {sparkles.map((sparkle, index) => (
+                  <span key={`${sparkle}-${index}`} style={{ '--sparkle-index': index } as CSSProperties}>
+                    {sparkle}
+                  </span>
+                ))}
+              </div>
+            </>
+          )}
         </div>
         {design.musicDataUrl && (
           <div className="shared-music">
