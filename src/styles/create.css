@@ -62,11 +62,12 @@
 
 .editor-layout {
   display: grid;
-  grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+  grid-template-columns: minmax(240px, 300px) minmax(0, 820px);
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
   min-width: 0;
+  justify-content: center;
 }
 
 .design-panel, .preview-panel {
@@ -130,6 +131,7 @@
 
 .preview-panel {
   display: flex;
+  width: 100%;
   min-height: 520px;
   flex-direction: column;
   align-items: center;
@@ -277,6 +279,10 @@
 
 .share-result input { margin-top: 0.4rem; }
 
+.mobile-share-button {
+  display: none;
+}
+
 @media (max-width: 760px) {
   .editor-header { flex-wrap: wrap; margin-bottom: 1rem; }
   .editor-header h1 { order: 3; width: 100%; }
@@ -284,6 +290,19 @@
   .preview-panel { min-height: clamp(320px, 70svh, 520px); padding: clamp(1rem, 4vw, 2rem); }
   .editor-header .share-button { margin-left: auto; }
   .message-card { min-height: clamp(260px, 55svh, 400px); padding: clamp(1.5rem, 8vw, 3rem); }
+  .editor-header .share-button {
+    display: none;
+  }
+
+  .mobile-share-button {
+    display: block;
+    width: min(100%, 680px);
+    margin-top: 1rem;
+  }
+
+  .share-result {
+    margin-top: 0.75rem;
+  }
 }
 
 @media (max-width: 420px) {

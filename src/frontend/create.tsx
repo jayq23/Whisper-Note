@@ -6,7 +6,7 @@ import { readSharedDesign } from '../types/design';
 import type { Design } from '../types/design';
 import { saveDesign } from '../lib/firebase';
 
-const stickerOptions = ['🌸', '💌', '✨', '🦋', '🎀', '💖', '𓍢ִ໋🌷͙֒', '🧸ྀི', 'ᥫ᭡', 'ꉂ(˵˃ ᗜ ˂˵)', '(˶ᵔ ᵕ ᵔ˶)', '⸜(｡˃ ᵕ ˂ )⸝♡', '(˶˃ ᵕ ˂˶)', '(╥﹏╥)', '⋆.ೃ࿔🌸*:･', ''];
+const stickerOptions = ['🌸', '💌', '✨', '🦋', '🎀', '💖', '𓍢ִ໋🌷͙֒', '🧸ྀི', 'ᥫ᭡', 'ꉂ(˵˃ ᗜ ˂˵)', '(˶ᵔ ᵕ ᵔ˶)', '⸜(｡˃ ᵕ ˂ )⸝♡', '(˶˃ ᵕ ˂˶)', '(╥﹏╥)', '⋆.ೃ࿔🌸*:･', '(˶˃⤙˂˶)'];
 const musicOptions = [
   { name: 'No music', source: '' },
   { name: 'I knew it, I knew you', source: '/music/song1.mp3'},
@@ -289,6 +289,9 @@ function Create() {
               </span>
             ))}
           </div>
+          <button type="button" className="share-button mobile-share-button" onClick={generateLink}>
+            Generate share link
+          </button>
           {shareLink && (
             <div className="share-result" role="status" aria-live="polite">
               <strong>Link ready — copied to clipboard</strong>
