@@ -15,6 +15,7 @@ export type Design = {
   stickers: Sticker[];
   musicDataUrl: string;
   musicName: string;
+  musicStartTime: number;
   placeholder: string;
 };
 
@@ -28,6 +29,7 @@ export const defaultDesign: Design = {
   stickers: [],
   musicDataUrl: '',
   musicName: '',
+  musicStartTime: 0,
   placeholder: 'Write your message here...',
 };
 
