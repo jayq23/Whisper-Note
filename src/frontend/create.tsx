@@ -9,6 +9,15 @@ const stickerOptions = ['🌸', '💌', '✨', '🦋', '🎀', '💖', '🌷', '
 const musicOptions = [
   { name: 'No music', source: '' },
   { name: 'I knew it, I knew you', source: '/music/song1.mp3'},
+  { name: 'The 1', source: '/music/song2.mp3'},
+  { name: 'Panaginip', source: '/music/song3.mp3'},
+  { name: 'You\'ll be in my heart', source: '/music/song4.mp3'},
+  { name: 'La la lost you', source: '/music/song5.mp3' },
+  { name: 'The apartment we won\'t share', source: '/music/song6.mp3' },
+  { name: 'Backburner', source: '/music/song7.mp3' },
+  { name: 'Totoong tayo', source: '/music/song8.mp4' },
+  { name: 'I love you, im sorry', source: '/music/song9.mp3' },
+  { name: 'GabI', source: '/music/song10.mp3' },
 ];
 
 const fonts = [
