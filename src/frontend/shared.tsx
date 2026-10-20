@@ -5,7 +5,7 @@ import { readSharedDesign } from '../types/design';
 import type { Design } from '../types/design';
 import { getSharedDesign } from '../lib/firebase';
 
-const TYPING_INTERVAL_MS = 100;
+const TYPING_INTERVAL_MS = 120;
 const floatingHearts = ['♥', '♡', '✦', '♥', '✧', '♡'];
 const backgroundParticles = ['·', '✦', '·', '✧', '·', '✦', '·', '♡'];
 const sparkles = ['✦', '✧', '✦', '·', '✧'];
