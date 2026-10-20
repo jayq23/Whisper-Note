@@ -42,6 +42,7 @@ function Create() {
   const location = useLocation();
   const [design, setDesign] = useState<Design>(() => readSharedDesign(location.search));
   const [shareLink, setShareLink] = useState('');
+  const [copyStatus, setCopyStatus] = useState('');
   const [draggedSticker, setDraggedSticker] = useState<number | null>(null);
   const [musicDuration, setMusicDuration] = useState(0);
   const musicRef = useRef<HTMLAudioElement>(null);
@@ -49,6 +50,7 @@ function Create() {
   const updateDesign = <K extends keyof Design>(key: K, value: Design[K]) => {
     setDesign((current) => ({ ...current, [key]: value }));
     setShareLink('');
+    setCopyStatus('');
   };
 
   const previewStyle = useMemo(
@@ -62,6 +64,17 @@ function Create() {
     [design],
   );
 
+  // Clipboard can be blocked (e.g. Safari after an await), so failure here
+  // must never hide the link or show an error alert.
+  const copyLink = async (link: string) => {
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopyStatus('Copied to clipboard');
+    } catch {
+      setCopyStatus('Tap "Copy link" or select the link to copy it');
+    }
+  };
+
   const generateLink = async () => {
     try {
       const id = await saveDesign(design);
@@ -69,7 +82,8 @@ function Create() {
       linkUrl.searchParams.set('id', id);
       const link = linkUrl.toString();
       setShareLink(link);
-      await navigator.clipboard.writeText(link);
+      setCopyStatus('');
+      void copyLink(link); // best-effort auto-copy
     } catch (error) {
       setShareLink('');
       window.alert(error instanceof Error ? error.message : 'Unable to create a share link.');
@@ -85,6 +99,7 @@ function Create() {
       ],
     }));
     setShareLink('');
+    setCopyStatus('');
   };
 
   const removeSticker = (id: number) => {
@@ -93,6 +108,7 @@ function Create() {
       stickers: current.stickers.filter((sticker) => sticker.id !== id),
     }));
     setShareLink('');
+    setCopyStatus('');
   };
 
   const moveSticker = (event: DragEvent<HTMLDivElement>) => {
@@ -120,6 +136,7 @@ function Create() {
     });
     setDraggedSticker(null);
     setShareLink('');
+    setCopyStatus('');
   };
 
   return (
@@ -163,7 +180,7 @@ function Create() {
           </div>
           <div className="alignment-controls" aria-label="Text alignment">
             {(['left', 'center', 'right'] as const).map((alignment) => (
-              <button className={design.align === alignment ? 'active' : ''} key={alignment}
+              <button type="button" className={design.align === alignment ? 'active' : ''} key={alignment}
                 onClick={() => updateDesign('align', alignment)}>
                 {alignment[0].toUpperCase() + alignment.slice(1)}
               </button>
@@ -219,6 +236,7 @@ function Create() {
                 musicStartTime: 0,
               }));
               setShareLink('');
+              setCopyStatus('');
             }}
           >
             {musicOptions.map((option) => (
@@ -294,8 +312,17 @@ function Create() {
           </button>
           {shareLink && (
             <div className="share-result" role="status" aria-live="polite">
-              <strong>Link ready — copied to clipboard</strong>
-              <input value={shareLink} readOnly aria-label="Generated share link" />
+              <strong>Link ready</strong>
+              <input
+                value={shareLink}
+                readOnly
+                aria-label="Generated share link"
+                onFocus={(event) => event.currentTarget.select()}
+              />
+              <button type="button" className="share-button" onClick={() => copyLink(shareLink)}>
+                Copy link
+              </button>
+              {copyStatus && <small>{copyStatus}</small>}
             </div>
           )}
         </section>
